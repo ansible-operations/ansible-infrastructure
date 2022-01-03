@@ -1,0 +1,13 @@
+---
+- name: include vars
+  include_vars:
+    file: "{{ item }}"
+  with_items:
+    - ../ssh/defaults/main.yml
+    - ../../vars/users.yml
+
+- import_tasks: adduser.yml
+- import_tasks: group.yml
+- import_tasks: user.yml
+- import_tasks: sudoers.yml
+- import_tasks: ../ssh/tasks/allow_login.yml

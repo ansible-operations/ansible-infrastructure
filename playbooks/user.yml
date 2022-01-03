@@ -1,0 +1,14 @@
+---
+# version: 2.10
+- name: manage server users
+  become: true
+  become_user: root
+  become_method: sudo
+  gather_facts: true
+  hosts: all
+  vars_files:
+    - defaults/main.yml
+
+  roles:
+    - role: user
+      tags: [account, user]

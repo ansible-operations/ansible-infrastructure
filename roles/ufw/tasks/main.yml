@@ -1,0 +1,24 @@
+- name: install ufw
+  become: true
+  package:
+    name: ufw
+    state: present
+
+- name: apply port rules
+  community.general.ufw:
+    port: "{{ item.port }}"
+    rule: "{{ item.rule }}"
+    delete: "{{ item.rule == 'deny' }}"
+  with_items: "{{ ufw_ports }}"
+
+- name: apply host extra port rules
+  community.general.ufw:
+    port: "{{ item.port }}"
+    rule: "{{ item.rule }}"
+    delete: "{{ item.rule == 'deny' }}"
+  with_items: "{{ host_ufw.extra_ports }}"
+  when: host_ufw is defined and host_ufw.extra_ports is defined
+
+- name: enable ufw
+  community.general.ufw:
+    state: enabled

@@ -1,0 +1,20 @@
+---
+- name: "test ssh port {{ ansible_port }}"
+  delegate_to: localhost
+  become: false
+  wait_for:
+    host: "{{ ansible_host }}"
+    port: "{{ ansible_port }}"
+    timeout: "{{ elapsed }}"
+  register: test_ssh_port
+  failed_when: false
+
+- name: set ansible_port by detect result
+  set_fact:
+    ansible_ssh_port: 22
+    need_change_ssh_port: true
+  when: test_ssh_port.elapsed >= elapsed
+
+- name: turn on gather facts
+  setup:
+    gather_timeout: "{{ elapsed }}"

@@ -1,0 +1,26 @@
+---
+# version: 2.10
+- name: initialize server
+  become: true
+  become_user: root
+  become_method: sudo
+  gather_facts: false
+  hosts: all
+  vars_files:
+    - defaults/main.yml
+
+  pre_tasks:
+    - name: detect preconditions
+      import_role:
+        name: detect
+      tags: [detect]
+
+  roles:
+    - role: packages
+      tags: [system, package]
+    - role: ufw
+      tags: [security, network]
+    - role: ohmyzsh
+      tags: [account, shell]
+    - role: ssh
+      tags: [network, account]

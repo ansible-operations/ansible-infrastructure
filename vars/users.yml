@@ -1,0 +1,15 @@
+# define all human users, and use them by user role
+---
+user_groups:
+  - name: admin
+    state: present
+  - name: maintainer
+    state: present
+user_default_group:
+  name: human
+  state: present
+users_states:
+  human:
+    state: present
+  donkey:
+    state: absent

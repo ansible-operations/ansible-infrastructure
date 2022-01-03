@@ -1,0 +1,17 @@
+---
+
+# to cancel a rule, change 'allow' to 'deny',
+#   simply removing the rule will not disable it
+ufw_ports:
+  - name: ssh
+    port: "22"
+    rule: allow
+  - name: http
+    port: "80"
+    rule: allow
+  - name: https
+    port: "443"
+    rule: allow
+  - name: custom_ssh
+    port: "{{ ansible_port }}"
+    rule: allow

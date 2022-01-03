@@ -1,0 +1,7 @@
+---
+
+- name: ensure user groups
+  ansible.builtin.group:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+  with_items: "{{ user_groups }}"

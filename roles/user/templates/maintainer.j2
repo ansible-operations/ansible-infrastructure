@@ -1,0 +1,3 @@
+{%- for item in host_appusers %}
+%maintainer ALL=({{ item.name }}:{{ item.name }}) NOPASSWD:ALL
+{% endfor %}

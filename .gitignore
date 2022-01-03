@@ -1,0 +1,9 @@
+# personal config
+ansible.cfg
+.vscode
+
+# local files
+.cache/
+local/
+temp/
+tmp/

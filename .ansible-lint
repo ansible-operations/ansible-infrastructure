@@ -1,0 +1,9 @@
+# https://ansible-lint.readthedocs.io/en/latest/configuring.html
+enable_list:
+  - yaml
+exclude_paths:
+  - .git/
+  - .pre-commit-config.yaml
+  - .yamllint.yaml
+skip_list:
+  - meta-no-info

@@ -1,0 +1,31 @@
+---
+# repo
+ohmyzsh_repo: git@github.com:okvk/ohmyzsh.git
+
+# git version
+ohmyzsh_version: "20210711"
+
+# remote dir
+ohmyzsh_remote_dir: "/usr/share/oh-my-zsh"
+
+# config dir
+ohmyzsh_config_dir: "/usr/share/configs/"
+
+# config template
+ohmyzsh_config_tmpl: "{{ ohmyzsh_config_dir }}/zshrc.zsh-template"
+
+# default theme
+ohmyzsh_theme: candy
+
+# default plugins
+ohmyzsh_plugins:
+  - git
+
+# this var could be used when the bug is fixed:
+# https://www.reddit.com/r/ansible/comments/eo6lwq/why_is_ansible_user_not_defined_when_accessed/
+# # users to setup ohmyzsh
+# ohmyzsh_init_users:
+#   - name: root
+#     home: "/root"
+#   - name: "{{ ansible_user }}"
+#     home: "/home/{{ ansible_user }}"

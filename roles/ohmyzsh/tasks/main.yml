@@ -1,0 +1,104 @@
+---
+
+- name: install dependencies
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - git
+    - zsh
+
+- name: git clone ohmyzsh repo locally
+  git:
+    repo: "{{ ohmyzsh_repo }}"
+    dest: "{{ local_tmp }}/ohmyzsh"
+    depth: "1"
+    archive: "{{ local_tmp }}/ohmyzsh.tgz"
+    version: "{{ ohmyzsh_version }}"
+    umask: "022"
+  become: false
+  delegate_to: localhost
+
+- name: ensure directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  with_items:
+    - "{{ ohmyzsh_remote_dir }}"
+    - "{{ ohmyzsh_config_dir }}"
+
+- name: upload ohmyzsh repo
+  unarchive:
+    src: "{{ local_tmp }}/ohmyzsh.tgz"
+    dest: "{{ ohmyzsh_remote_dir }}"
+    copy: true
+    mode: g-w,o-w
+
+- name: copy zshrc template
+  copy:
+    src: "{{ ohmyzsh_remote_dir }}/templates/zshrc.zsh-template"
+    dest: "{{ ohmyzsh_config_tmpl }}"
+    remote_src: true
+    mode: 0644
+    force: false
+
+- name: customize zshrc
+  lineinfile:
+    dest: "{{ ohmyzsh_config_tmpl }}"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - regexp: "^export PATH="
+      line: "export PATH=$HOME/bin:/usr/local/bin:$PATH"
+    - regexp: "^export ZSH="
+      line: "export ZSH={{ ohmyzsh_remote_dir }}"
+    - regexp: "^export LANG="
+      line: "export LANG=en_US.UTF-8"
+    - regexp: "^export LANGUAGE="
+      line: "export LANGUAGE=en_US.UTF-8"
+    - regexp: "^export LC_ALL="
+      line: "export LC_ALL=en_US.UTF-8"
+    - regexp: "^ZSH_THEME="
+      line: "ZSH_THEME={{ ohmyzsh_theme }}"
+    - regexp: "^plugins="
+      line: "plugins=({{ ohmyzsh_plugins | join(' ') }})"
+
+- name: set .zshrc as skeleton file
+  copy:
+    src: "{{ ohmyzsh_config_tmpl }}"
+    dest: "/etc/skel/.zshrc"
+    remote_src: true
+    mode: 0644
+
+# ansible bug: builtin vars can't be accessed in loop
+# https://www.reddit.com/r/ansible/comments/eo6lwq/why_is_ansible_user_not_defined_when_accessed/
+- name: add root to user list for initiating
+  set_fact:
+    init_users: >-
+      {{ [{ 'name': 'root', 'home': '/root' }] }}
+
+- name: add current user to user list
+  set_fact:
+    init_users: >-
+      {{
+        init_users +
+        [{ 'name': ansible_user, 'home': '/home/' + ansible_user }]
+      }}
+  when: ansible_user != "root"
+
+- name: setup .zshrc for users
+  copy:
+    src: "{{ ohmyzsh_config_tmpl }}"
+    dest: "{{ item.home }}/.zshrc"
+    remote_src: true
+    mode: 0644
+    backup: true
+  with_items: "{{ init_users }}"
+
+- name: change users shell to zsh
+  user:
+    name: "{{ item.name }}"
+    shell: /bin/zsh
+  with_items: "{{ init_users }}"

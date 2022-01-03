@@ -1,0 +1,5 @@
+---
+- name: initiate users if remote_user is root
+  include_role:
+    name: user
+  when: ansible_ssh_user == "root"

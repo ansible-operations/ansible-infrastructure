@@ -1,0 +1,10 @@
+---
+- name: "customize adduser config {{ adduser_conf_path }}"
+  lineinfile:
+    dest: "{{ adduser_conf_path }}"
+    regexp: "{{ item.regex }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - regex: "^DIR_MODE"
+      line: "DIR_MODE=0750"

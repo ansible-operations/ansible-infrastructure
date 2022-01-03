@@ -1,0 +1,4 @@
+---
+# handlers file for roles/ssh
+- name: restart sshd
+  service: name=sshd state=restarted

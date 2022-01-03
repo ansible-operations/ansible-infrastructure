@@ -1,0 +1,33 @@
+---
+host_appusers:
+  - name: appuser1
+  - name: appuser2
+
+host_users:
+  - name: human
+    # optional props, they all have default values
+    password: $6$sweetsalt$24QcAO2/of8NWDwyCVdrDu904VnpdXWvQg5n2ctd90mTkRMcXtw.rR22SM5YE5TaUzKKLwdGswChfXkBJ.WNl0
+    shell: /bin/zsh
+    # primary group
+    group: admin
+    # all groups
+    groups:
+      - admin
+      - maintainer
+      - appuser1
+    state: present
+
+  - name: donkey
+    state: absent
+
+host_ufw:
+  extra_ports:
+    - name: test_ufw
+      port: "9527"
+      rule: deny
+
+host_gitlab_runners: []
+
+host_nodejs:
+  dir: /opt/node
+  versions: [""]

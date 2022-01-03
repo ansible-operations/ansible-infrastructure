@@ -1,0 +1,4 @@
+---
+# tmp dir
+local_tmp: "~/.ansible/tmp"
+remote_tmp: "~/.ansible/tmp"

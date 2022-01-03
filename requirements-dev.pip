@@ -1,0 +1,5 @@
+-r requirements-use.pip
+ansible-lint==5.3.1
+passlib==1.7.4
+pre-commit==2.10.1
+yamllint==1.26.2

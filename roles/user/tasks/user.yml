@@ -1,0 +1,45 @@
+---
+- name: create host appusers
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    shell: "{{ user_default_shell }}"
+    home: "{{ appuser_home }}/{{ item.name }}"
+    state: present
+    append: false
+  with_items: "{{ host_appusers }}"
+
+- name: set home dir permissions for appuser
+  file:
+    path: "{{ appuser_home }}/{{ item.name }}"
+    state: directory
+    mode: 0750
+  with_items: "{{ host_appusers }}"
+
+- name: create host human users
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    password: "{{ item.password | default('!') }}"
+    shell: "{{ item.shell | default(user_default_shell) }}"
+    group: "{{ item.group | default(item.name) }}"
+    groups: "{{ item.groups | default(user_default_group.name) }}"
+    state: "{{ item.state if users_states[item.name].state == 'present' \
+      else 'absent' }}"
+    update_password: on_create
+    append: false
+  with_items: "{{ host_users }}"
+
+- name: set home dir permissions for human users
+  file:
+    path: "/home/{{ item.name }}"
+    state: directory
+    mode: 0750
+  with_items: "{{ host_users }}"
+
+- name: set user authorized_keys
+  ansible.posix.authorized_key:
+    user: "{{ item.name }}"
+    key: "{{ lookup('file', '../../files/public_keys/' + item.name + '.pub') }}"
+    exclusive: true
+    state: present
+  with_items: "{{ host_users }}"
+  when: item.state is not defined or item.state != 'absent'

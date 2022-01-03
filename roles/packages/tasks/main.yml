@@ -1,0 +1,17 @@
+---
+- name: read packages list from os distribution vars file
+  include_vars: "{{ lookup('first_found', params) }}"
+  vars:
+    params:
+      files:
+        - "{{ ansible_distribution }}.yml"
+        - "{{ ansible_os_family }}.yml"
+        - default.yml
+      paths:
+        - "vars"
+
+- name: install system packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ sys_packages }}"

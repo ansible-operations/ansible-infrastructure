@@ -1,0 +1,5 @@
+---
+adduser_conf_path: /etc/adduser.conf
+sudoers_dir: /etc/sudoers.d
+appuser_home: /home/services
+user_default_shell: /bin/zsh

@@ -1,0 +1,35 @@
+---
+- import_tasks: if_root.yml
+
+- name: disable root login
+  lineinfile:
+    dest: "{{ sshd_config_path }}"
+    regexp: "^\\s*PermitRootLogin"
+    line: "PermitRootLogin no"
+    state: present
+    backup: true
+  notify: restart sshd
+
+- name: disable password login
+  lineinfile:
+    dest: "{{ sshd_config_path }}"
+    regexp: "^\\s*PasswordAuthentication"
+    line: "PasswordAuthentication no"
+    state: present
+  notify: restart sshd
+
+- name: change port to {{ ansible_port }}
+  lineinfile:
+    dest: "{{ sshd_config_path }}"
+    regexp: "^\\s*Port"
+    line: "Port {{ ansible_port }}"
+    state: present
+  notify: restart sshd
+  when: need_change_ssh_port is defined and need_change_ssh_port
+
+- name: trigger restart sshd immediately
+  meta: flush_handlers
+
+- name: turn on gather facts
+  setup:
+    gather_timeout: "{{ elapsed }}"

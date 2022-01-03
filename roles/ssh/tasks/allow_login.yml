@@ -1,0 +1,9 @@
+---
+- name: only allow specific groups members to login
+  lineinfile:
+    dest: "{{ sshd_config_path }}"
+    regexp: "^AllowGroups"
+    line: "AllowGroups {{ (user_groups + [user_default_group]) \
+      | map(attribute='name') | join(' ') }}"
+    state: present
+  notify: restart sshd
