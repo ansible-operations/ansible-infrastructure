@@ -2,7 +2,7 @@
 - name: setup appuser sudoers
   ansible.builtin.template:
     src: "appuser.j2"
-    dest: "{{ sudoers_dir }}/{{ item.name }}"
+    dest: "{{ sudoers_dir }}/z-{{ item.name }}"
     mode: 0440
     validate: visudo -cf %s
     backup: true
