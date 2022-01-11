@@ -21,7 +21,7 @@
     password: "{{ item.password | default('!') }}"
     shell: "{{ item.shell | default(user_default_shell) }}"
     group: "{{ item.group | default(item.name) }}"
-    groups: "{{ item.groups | default(user_default_group.name) }}"
+    groups: "{{ item.groups + [user_default_group.name] }}"
     state: "{{ item.state if users_states[item.name].state == 'present' \
       else 'absent' }}"
     update_password: on_create
