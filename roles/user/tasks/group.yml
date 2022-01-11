@@ -4,4 +4,4 @@
   ansible.builtin.group:
     name: "{{ item.name }}"
     state: "{{ item.state }}"
-  with_items: "{{ user_groups }}"
+  with_items: "{{ user_groups + [user_default_group] }}"

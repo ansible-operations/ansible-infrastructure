@@ -6,7 +6,7 @@ user_groups:
   - name: maintainer
     state: present
 user_default_group:
-  name: human
+  name: humangroup
   state: present
 users_states:
   human:
