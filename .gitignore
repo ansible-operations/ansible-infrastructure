@@ -7,3 +7,4 @@ ansible.cfg
 local/
 temp/
 tmp/
+vaults/

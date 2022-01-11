@@ -4,6 +4,24 @@
 
 使用 Ansible 配置化、自动化地管理服务器基础设施。
 
+## 目录
+
+- [Ansible Infrastructure](#ansible-infrastructure)
+  - [目录](#目录)
+  - [安装使用](#安装使用)
+    - [已测试过的 Linux 发行版](#已测试过的-linux-发行版)
+    - [安装 Ansible](#安装-ansible)
+    - [`ansible.cfg`](#ansiblecfg)
+    - [Demo](#demo)
+    - [执行 playbook](#执行-playbook)
+    - [使用 ansible-vault](#使用-ansible-vault)
+  - [playbooks](#playbooks)
+  - [roles](#roles)
+  - [开发环境配置](#开发环境配置)
+  - [常用 ad-hoc 命令](#常用-ad-hoc-命令)
+    - [`ping`](#ping)
+  - [参考](#参考)
+
 ## 安装使用
 
 ### 已测试过的 Linux 发行版
@@ -44,6 +62,12 @@ ansible demo -i inventories/demo/hosts.ini -e "ansible_port=22" \
 # 如果登录使用的 remote_user 是 root, 则无需提供 -K 选项
 ansible-playbook -K -i inventories/demo/hosts.ini playbooks/bootstrap.yml
 ```
+
+### 使用 ansible-vault
+
+约定所有加密文件为 `.vault` 后缀，加解密时通过 `--vault-id` 指定密码，密码存于 `vaults/`
+目录中。假设某个 vault 的密码为 `123456`，其 label 为 `kvko`，则文件 `vaults/kvko`
+的内容为 `123456`。使用时由 `--vault-id kvko@vaults/kvko` 指定。
 
 ## playbooks
 
