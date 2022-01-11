@@ -69,6 +69,12 @@ ansible-playbook -K -i inventories/demo/hosts.ini playbooks/bootstrap.yml
 目录中。假设某个 vault 的密码为 `123456`，其 label 为 `kvko`，则文件 `vaults/kvko`
 的内容为 `123456`。使用时由 `--vault-id kvko@vaults/kvko` 指定。
 
+或者将 `--vault-id` 参数值保存于 `ansible.cfg` 中，如此可以省去手动输入 `--vault-id`:
+
+```cfg
+vault_identity_list = demo@vaults/demo, demo1@vaults/demo1
+```
+
 ## playbooks
 
 每个 playbook 由不同的 roles 构成，可为不同场景、特定用途编写相应的 playbook。
