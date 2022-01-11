@@ -1,5 +1,5 @@
 ---
-- name: "add current user into admin"
+- name: ensure current user in admin group
   ansible.builtin.user:
     name: "{{ ansible_user }}"
     shell: "{{ item.shell | default(user_default_shell) }}"
@@ -8,6 +8,7 @@
     state: present
     update_password: on_create
     append: false
+  when: ansible_user not in (host_users | map(attribute='name'))
 
 - name: create host appusers
   ansible.builtin.user:
