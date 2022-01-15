@@ -94,6 +94,8 @@
     dest: "{{ item.home }}/.zshrc"
     remote_src: true
     mode: 0644
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
     backup: true
   with_items: "{{ init_users }}"
 
